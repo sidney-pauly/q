@@ -1,0 +1,5 @@
+__pycache__
+q.egg-info
+build
+.venv
+.pytest_cache
