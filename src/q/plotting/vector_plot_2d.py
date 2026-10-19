@@ -78,36 +78,39 @@ def plot_streamlines(x, y, u, v, mirror: Literal[False, 'x', 'y']=False, rot90: 
     if colorbar:
         add_colorbar(l, cmap, cmap_label, False, vmin=vmin, vmax=vmax, label_format = colorbar_format,cbar_parameters=colorbar_params)
 
-    if x[0] > x[-1]:
-        x = np.flip(x)
-        u = np.flip(u)
+    # if x[0] > x[-1]:
+    #     x = np.flip(x)
+    #     u = np.flip(u)
 
-    if y[0] > y[-1]:
-        y = np.flip(y)
-        v = np.flip(v)
+    # if y[0] > y[-1]:
+    #     y = np.flip(y)
+    #     v = np.flip(v)
 
-    if mirror == 'y':
-        xx = np.concatenate((np.flip(-x), x))
-        uu = np.concatenate((np.flip(-u, 1), u), axis=1)
-        vv = np.concatenate((np.flip(v, 1), v), axis=1)
-        ll = np.concatenate((np.flip(l, 1), l), axis=1)
+    contour = plot_contour_2d(x, y, l, mirror=mirror, cmap=cmap, symmetric_limits=False)
+    streamlines = plt.streamplot(x, y, u, v, color=streamline_color, cmap=cmap, density=2)
 
-        xx = np.delete(xx, len(x)-1, 0)
-        uu = np.delete(uu, len(x)-1, 1)
-        vv = np.delete(vv, len(x)-1, 1)
-        ll = np.delete(ll, len(x)-1, 1)
+    # if mirror == 'y':
+    #     xx = np.concatenate((np.flip(-x), x))
+    #     uu = np.concatenate((np.flip(-u, 1), u), -axis=1)
+    #     vv = np.concatenate((np.flip(v, 1), v), axis=1)
+    #     ll = np.concatenate((np.flip(l, 1), l), axis=1)
 
-        contour = plot_contour_2d(x, y, l, mirror=mirror, cmap='plasma', symmetric_limits=False)
-        streamlines = plt.streamplot(xx, y, uu, vv, color=streamline_color, cmap='plasma', density=2)
+    #     xx = np.delete(xx, len(x)-1, 0)
+    #     uu = np.delete(uu, len(x)-1, 1)
+    #     vv = np.delete(vv, len(x)-1, 1)
+    #     ll = np.delete(ll, len(x)-1, 1)
 
-    else:
-        xx = x
-        uu = -u
-        vv = -v
+    #     contour = plot_contour_2d(x, y, l, mirror=mirror, cmap='plasma', symmetric_limits=False)
+    #     streamlines = plt.streamplot(xx, y, uu, vv, color=streamline_color, cmap='plasma', density=2)
+
+    # else:
+    #     xx = x
+    #     uu = -u
+    #     vv = -v
 
 
-        contour = plot_contour_2d(xx, y, l, mirror=mirror, cmap='plasma', symmetric_limits=False)
-        streamlines = plt.streamplot(xx, y, uu, vv, color=streamline_color, cmap='plasma', density=2)
+    #     contour = plot_contour_2d(xx, y, l, mirror=mirror, cmap='plasma', symmetric_limits=False)
+    #     streamlines = plt.streamplot(xx, y, uu, vv, color=streamline_color, cmap='plasma', density=2)
 
     return contour, streamlines
 

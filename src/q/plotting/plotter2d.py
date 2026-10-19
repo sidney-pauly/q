@@ -63,7 +63,7 @@ def _map_mash_for_geometry(mesh: np.ndarray, map: dict[str, Any], default: Any =
     return None
             
 
-def add_geometry(x, y, mesh, definitions: list[tuple[list[str], str, str]], ax=plt, mesh_color='white', mirror: Literal[False, 'x', 'y']=False, add_legend=True, legend_loc: int = 2, zorder=2.001, rot90:int=0):
+def add_geometry(x, y, mesh, definitions: list[tuple[list[str], str, str, str]], ax=plt, mesh_color='white', mirror: Literal[False, 'x', 'y']=False, add_legend=True, legend_loc: int = 2, zorder=2.001, rot90:int=0):
     '''
     Adds geometry to the plot based on the ASCII mesh and a definition for what hatch pattern 
     to apply
@@ -83,7 +83,7 @@ def add_geometry(x, y, mesh, definitions: list[tuple[list[str], str, str]], ax=p
     geometries = list(map_mesh(mesh, dict([(s, fill_val) for s in d[0]]), default=[float('nan'),0., 0., 0.]) for d in definitions)
     
     # Make hatched patches for the legend (duplicate the hatch symbols to increase density)
-    circs = [mpatches.Patch(facecolor='gray', hatch=str([f'{s}{s}' for s in d[2]]), label=d[1]) for d in definitions]
+    circs = [mpatches.Patch(facecolor='gray', linewidth=0, edgecolor=d[3] if len(d) > 3 else mesh_color, hatch=str([f'{s}{s}' for s in d[2]]), label=d[1]) for d in definitions]
 
     mod = rot90 % 4
     # y correction to draw at center of cells
@@ -103,11 +103,11 @@ def add_geometry(x, y, mesh, definitions: list[tuple[list[str], str, str]], ax=p
 
         geometry = geometries[i] 
 
-        ax.pcolor(x, y, geometry, hatch=definitions[i][2], hatch_linewidth=1, edgecolor=mesh_color, linewidths=0, zorder=zorder)
+        ax.pcolor(x, y, geometry, hatch=definitions[i][2], hatch_linewidth=1, edgecolor=definitions[i][3] if len(definitions[i]) > 3 else mesh_color, linewidths=0, zorder=zorder)
         if mirror == 'x':
-            ax.pcolor(x, y*-1, geometry,  hatch=definitions[i][2], hatch_linewidth=1, edgecolor=mesh_color, linewidths=0, zorder=zorder)
+            ax.pcolor(x, y*-1, geometry,  hatch=definitions[i][2], hatch_linewidth=1, edgecolor=definitions[i][3] if len(definitions[i]) > 3 else mesh_color, linewidths=0, zorder=zorder)
         if mirror == 'y':
-            ax.pcolor(x*-1, y, geometry,  hatch=definitions[i][2], hatch_linewidth=1, edgecolor=mesh_color, linewidths=0, zorder=zorder)
+            ax.pcolor(x*-1, y, geometry,  hatch=definitions[i][2], hatch_linewidth=1, edgecolor=definitions[i][3] if len(definitions[i]) > 3 else mesh_color, linewidths=0, zorder=zorder)
     
     if add_legend:
         ax.legend(handles = circs, loc=legend_loc)  

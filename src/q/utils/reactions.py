@@ -234,3 +234,56 @@ def filter_reactions(species: Iterable[Species], reactions: Iterable[Reaction], 
     species = [s for s in species if s.name in species_names]
 
     return species, reactions
+
+
+'''
+Class to split molecules into their atoms
+'''
+class MoleculeAnalyzer():
+
+    '''
+    Initializes a new Molecule Analyzer object with a set
+    of allowed atom species.
+    Species should be given as their base name, e.g. 'H' for hydrogen or
+    'AR' for argon
+    '''
+    def __init__(self, atoms: Iterable[str]) -> None:
+
+        species_condition = '|'.join(atoms)
+        species_regex = fr'^((({species_condition})+[0-9]*)+)([SMPDR]+)*(V[0-9]*)*(\-*\+*\^*)(\**)$'
+        self.species_re = re.compile(species_regex)
+        self.atom_re = re.compile(fr'({species_condition})[0-9]*')
+
+    '''
+    Returns a dictionary with the atom name and its count.
+    If the molecule contains unrecognized species throws an error
+    '''
+    def get_atoms_from_molecule_name(self, molecule: str):
+
+        m = self.species_re.search(molecule)
+        if m is None:
+            raise Exception("PARSE ERROR")
+        g = m.groups()
+        excitation_stripped = g[0]
+
+        atoms =  [molecule[m.regs[0][0]:m.regs[0][1]] for m in self.atom_re.finditer(excitation_stripped)]
+        
+        return [(a, 1) if len(a) < 2 else (a[0:1], int(a[1:])) for a in atoms]
+
+def get_molecule_total_size(m: Iterable[tuple[str, int]]):
+    return sum(x[1] for x in m)
+
+def atoms_to_molecule(atoms: Iterable[tuple[str, int]]):
+    res = ''
+    for n, c in atoms:
+        res += n
+        if c > 1:
+            res += str(c)
+    return res
+
+def filter_largest_molecules(molecules: Iterable[tuple[str, Iterable[tuple[str, int]]]]):
+
+    biggest = max(get_molecule_total_size(m[1]) for m in molecules) 
+
+    return [m for m in molecules if get_molecule_total_size(m[1]) == biggest]
+

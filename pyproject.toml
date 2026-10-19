@@ -4,6 +4,6 @@ version = "0.0.1"
 authors = [
   { name="Sidney Pauly", email="me@sidneypauly.me" },
 ]
-description = "Utilitly package to work with the HPEM plasma simulation software"
+description = "Utility package to work with the HPEM plasma simulation software"
 readme = "readme.md"
 requires-python = ">=3.9"
