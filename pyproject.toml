@@ -7,3 +7,14 @@ authors = [
 description = "Utility package to work with the HPEM plasma simulation software"
 readme = "readme.md"
 requires-python = ">=3.9"
+
+dependencies = [
+  "matplotlib >=  3.0.0",
+  "numpy  >=  2.0.0"
+]
+
+[project.optional-dependencies]
+chem_graphs = [
+  "networkx >=  3.7"
+]
+
