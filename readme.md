@@ -29,6 +29,7 @@ snake. Now "Aldebaran" is a terrible name for a package as everyone would consta
     - As movie
 - Analyze chemical reaction data as a network utilizing `networkx`
 - Plot chemical reaction data as a graph
+- Calculate heavy particle reaction rates from cell densities and temperatures (see `./examples/reaction_rate.py`)
 
 # Install
 
